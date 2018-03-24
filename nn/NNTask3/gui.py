@@ -33,26 +33,22 @@ class GUI:
         self.w1 = 0
         self.w2 = 0
         self.b = 0
+        self.NumberOfHiddenLayers = 0;
+        self.NumberOfNeuronsInEachLayer = 0;
         self.initializeComponents()
         self.root.mainloop()
         #######################
     def initializeComponents(self):
         def defocus(event):
             event.widget.master.focus_set()
-        Label(self.root,text="Select Two Classes:").place(relx=0.11, rely=0.05)
-        classes = ttk.Combobox(self.root, width=12, textvariable=self.choosenClasses)
-        classes.place(relx=0.5, rely=0.05)
-        #self.__first_class= StringVar(self.root)
-        classes['values'] = ("C1 & C2","C2 & C3","C1 & C3")
-        classes.place(relx=0.54, rely=0.05)
-        classes.current(0)
-        classes.bind("<FocusIn>", defocus)
-        Label(self.root,text="Select Two Features:").place(relx=0.11, rely=0.14)
-        features = ttk.Combobox(self.root, width=12, textvariable=self.chosenFeatures)
-        features['values'] = ("X1 & X2","X1 & X3","X1 & X4","X2 & X3","X2 & X4","X3 & X4")
-        features.place(relx=0.54, rely=0.14)
-        features.current(0)
-        features.bind("<FocusIn>", defocus)
+        Label(self.root,text="Number Of Hidden Layers").place(relx=0.11, rely=0.05)
+        Entry(self.root,width=10 , textvariable = self.NumberOfHiddenLayers).place(relx=0.65, rely=0.05);
+
+        Label(self.root,text="Number Of Neurons In Each Layer").place(relx=0.01, rely=0.14)
+        Entry(self.root,width=8 , textvariable = self.NumberOfNeuronsInEachLayer).place(relx=0.71, rely=0.14);
+
+
+
         Label(self.root,text="Enter Learning Rate(eta):").place(relx=0.11, rely=0.23)
         eta = Entry(self.root,width=10,textvariable=self.learnRate )
         eta.place(relx=0.64, rely=0.23)
