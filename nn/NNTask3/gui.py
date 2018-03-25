@@ -1,19 +1,20 @@
-from tkinter import *
+import tkinter as tk
 from tkinter import ttk
 import matplotlib.pyplot as plt
 from readData import ReadData
 from NNTask3.plotIris import PlotIris
 import NNTask3.BackPropagation
 import numpy as np
+from NNTask3.AdaLineAlgorithm import AdaLineAlgo
 
 class GUI:
     def __init__(self):
-        self.root = Tk()
-        self.choosenClasses= StringVar(self.root)
-        self.chosenFeatures = StringVar(self.root)
-        self.learnRate = StringVar(self.root)
-        self.epochsNo = StringVar(self.root)
-        self.bias = IntVar(self.root)
+        self.root = tk.Tk()
+        self.choosenClasses= tk.StringVar(self.root)
+        self.chosenFeatures = tk.StringVar(self.root)
+        self.learnRate = tk.StringVar(self.root)
+        self.epochsNo = tk.StringVar(self.root)
+        self.bias = tk.IntVar(self.root)
         self.bias.set(0)
         self.root.resizable(height=False, width=False)
         self.root.title("NN Task1")
@@ -25,46 +26,73 @@ class GUI:
         self.classlable_training = []
         self.classlable_testing = []
         self.dataset = []
-        self.errorTh = 5
-        self.plotLine = IntVar(self.root)
+        self.errorTh =tk.IntVar(self.root)
+        self.plotLine = tk.IntVar(self.root)
         self.plotLine.set(0)
         self.c1 = 0
         self.c2 = 0
         self.w1 = 0
         self.w2 = 0
         self.b = 0
-        self.NumberOfHiddenLayers = 0;
-        self.NumberOfNeuronsInEachLayer = 0;
+        self.NumberOfHiddenLayers = tk.StringVar(self.root)
+        self.NumberOfNeuronsInEachLayer = tk.StringVar(self.root)
+        self.activationFunction = tk.IntVar()
+        self.stoppingCriteria = tk.IntVar()
         self.initializeComponents()
         self.root.mainloop()
         #######################
+
     def initializeComponents(self):
         def defocus(event):
             event.widget.master.focus_set()
-        Label(self.root,text="Number Of Hidden Layers").place(relx=0.11, rely=0.05)
-        Entry(self.root,width=10 , textvariable = self.NumberOfHiddenLayers).place(relx=0.65, rely=0.05);
+        tk.Label(self.root,text="# Of Hidden Layers").place(relx=0.11, rely=0.05)
+        HLEntry = tk.Entry(self.root,width=10 , textvariable = self.NumberOfHiddenLayers)
+        HLEntry.place(relx=0.64, rely=0.05)
 
-        Label(self.root,text="Number Of Neurons In Each Layer").place(relx=0.01, rely=0.14)
-        Entry(self.root,width=8 , textvariable = self.NumberOfNeuronsInEachLayer).place(relx=0.71, rely=0.14);
+        tk.Label(self.root,text="# Of Neurons In Each Layer").place(relx=0.11, rely=0.14)
+        NEntry = tk.Entry(self.root, width=10, textvariable = self.NumberOfNeuronsInEachLayer)
+        NEntry.place(relx=0.64, rely=0.14)
 
-
-
-        Label(self.root,text="Enter Learning Rate(eta):").place(relx=0.11, rely=0.23)
-        eta = Entry(self.root,width=10,textvariable=self.learnRate )
+        tk.Label(self.root,text="Enter Learning Rate(eta):").place(relx=0.11, rely=0.23)
+        eta = tk.Entry(self.root,width=10,textvariable=self.learnRate )
         eta.place(relx=0.64, rely=0.23)
-        Label(self.root,text="Enter Number of Epochs:").place(relx=0.11, rely=0.32)
-        epochs = Entry(self.root,width=10,textvariable=self.epochsNo)
+
+        tk.Label(self.root,text="Enter Number of Epochs:").place(relx=0.11, rely=0.32)
+        epochs = tk.Entry(self.root,width=10,textvariable=self.epochsNo)
         epochs.place(relx=0.64, rely=0.32)
-        Label(self.root,text="Enter Error Threshold:").place(relx=0.11, rely=0.42)
-        errorTh = Entry(self.root,width=10,textvariable=self.errorTh)
-        errorTh.place(relx=0.64, rely=0.42)
-        Label(self.root,text="Bias:").place(relx=0.11, rely=0.51)
-        Checkbutton(self.root,variable=self.bias).place(relx=0.21, rely=0.51)
-        Label(self.root,text="plot line:").place(relx=0.11, rely=0.61)
-        Checkbutton(self.root,variable=self.plotLine).place(relx=0.31, rely=0.61)
-        Button(self.root, text="Plotting",width=10, fg="Black",bg="light Gray", command=lambda: self.plotFeatures()).place(relx=0.53, rely=0.61)
-        Button(self.root, text="Learning",width=10, fg="Black",bg="light Gray", command=lambda: self.learning()).place(relx=0.53, rely=0.71)
-        Button(self.root, text="Testing",width=10, fg="Black",bg="light Gray", command=lambda: self.testing()).place(relx=0.53, rely=0.81)
+
+        tk.Label(self.root, text="Choose an activation function").place(relx=0.03, rely=0.41)
+        tk.Radiobutton(self.root,
+                       text="Sigmoid",
+                       variable=self.activationFunction,
+                       value=1).place(relx=0.03, rely=0.45)
+        tk.Radiobutton(self.root,
+                       text="Hyperbolic Tangent Sigmoid",
+                       variable=self.activationFunction,
+                       value=2).place(relx=0.03, rely=0.49)
+
+        tk.Label(self.root, text="Bias:").place(relx=0.70, rely=0.41)
+        tk.Checkbutton(self.root, variable=self.bias).place(relx=0.78,
+                                                            rely=0.41)
+
+        tk.Label(self.root, text="Choose The Stopping Criteria").place(
+            relx=0.03, rely=0.58)
+        tk.Radiobutton(self.root,
+                       text="# of Epochs",
+                       variable=self.stoppingCriteria,
+                       value=1).place(relx=0.03, rely=0.62)
+        tk.Radiobutton(self.root,
+                       text="MSE Threshold",
+                       variable=self.stoppingCriteria,
+                       value=2).place(relx=0.03, rely=0.66)
+
+        errorTh = tk.Entry(self.root, width=10, textvariable=self.errorTh)\
+            .place(relx=0.64, rely=0.66)
+
+        tk.Button(self.root, text="Plotting",width=10, fg="Black",bg="light Gray", command=lambda: self.plotFeatures()).place(relx=0.03, rely=0.80)
+        tk.Button(self.root, text="Learning",width=10, fg="Black",bg="light Gray", command=lambda: self.learning()).place(relx=0.35, rely=0.80)
+        tk.Button(self.root, text="Testing",width=10, fg="Black",bg="light Gray", command=lambda: self.testing()).place(relx=0.67, rely=0.80)
+
     def plotFeatures(self):
         chosenFeatures = self.chosenFeatures.get()
         feature1 = int(chosenFeatures[1])
