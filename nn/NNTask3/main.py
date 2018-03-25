@@ -1,5 +1,3 @@
-import numpy
-from readData import ReadData
 from NNTask3.gui import GUI
 
 gui = GUI()

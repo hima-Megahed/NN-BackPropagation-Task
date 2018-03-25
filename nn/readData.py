@@ -5,11 +5,11 @@ class ReadData:
         self.IrisX3 = []
         self.IrisX4 = []
         self.IrisY = []
+
     def readData(self):
         with open('./iris.txt') as irisTxt:
             irisTxt.readline()
             for line in irisTxt:
-                #print(line)
                 dt = line.split(',')
                 self.IrisX1.append(float(dt[0]))
                 self.IrisX2.append(float(dt[1]))
@@ -22,5 +22,4 @@ class ReadData:
                     self.IrisY.append(1)
                 else:
                     self.IrisY.append(2)
-        #print("ssfsawfe")//
     

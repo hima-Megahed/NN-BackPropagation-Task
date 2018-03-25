@@ -1,9 +1,11 @@
 import numpy as np
 
+
 class AdaLineAlgo:
     def __init__(self):
         pass
-    def adaLineAlgoTrain(self,featureX,featureY,classlabel,eta,m,bias,erroTh):
+
+    def adaLine_algorithm_train(self, featureX, featureY, classlabel, eta, m, bias, erroTh):
         i = 0
         error = 1
         c1 = classlabel[0]
@@ -59,7 +61,9 @@ class AdaLineAlgo:
         print(w1,w2,b)
         print('Done!')
         return (w1,w2,b)
-    
+
+
+
     def updateError(self,weight,bias, featureX, featureY, classlabel):
         MSE = 0
         for i in range(0,len(featureX)):
