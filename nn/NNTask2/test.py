@@ -1,7 +1,7 @@
 import numpy
 import matplotlib.pyplot as plt
 from readData import ReadData
-from plotIris import PlotIris
+#from plotIris import PlotIris
 
 def NN(m1,m2,w1,w2,b):
     z = m1*w1 + m2*w2 + b

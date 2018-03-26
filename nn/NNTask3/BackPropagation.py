@@ -3,9 +3,11 @@ import math
 
 
 class BackPropagation:
+
     def __init__(self):
         self.weights = {}
-        self.weights_inputs = []
+        self.weights_inputs = {}
+        pass
 
     def MainAlgorithm(self, features, eta, epochs, bias, threshold,
                       stopping_criteria, activation_function,
@@ -40,7 +42,27 @@ class BackPropagation:
             yuo=0
 
         else:  # Threshold MSE
-            y = 5
+            MSE = 10000000.0
+            while MSE > threshold:
+               for j in range(len(features["X1"])):
+                    # getting input vector
+                    X = [features["X1"][j], features["X2"][j],
+                         features["X3"][j], features["X4"][j]]
+                    YOut = features["Y"][j]
+                    weights_inputs = self.NetInput(X, weights, weights_inputs,
+                                                   bias, num_hidden_layer,
+                                                   num_neurons_layer,
+                                                   activation_function)
+                    error = self.propagate_error(weights_inputs, weights,
+                                                 num_hidden_layer,
+                                                 num_neurons_layer,
+                                                 YOut, activation_function)
+
+                    weights = self.update_weights(weights_inputs, weights, num_hidden_layer
+                       ,num_neurons_layer, eta, error)
+
+                    MSE = self.ComputeMeanSquareError(error)
+
             # TODO: Implement Threshold as stopping condition
         return 1
 
@@ -81,7 +103,11 @@ class BackPropagation:
                     ind += 1
                 ind_WInput += num_neurons_layer
         return weights_inputs
-
+    def ComputeMeanSquareError(self,error):
+        sum = 0.0
+        for i in range(len(error)):
+            sum += error[i]**2
+        return sum/len(error)
     @staticmethod
     def sigmoid(x):
         return 1 / (1 + math.exp(-x))
@@ -219,3 +245,26 @@ class BackPropagation:
                     ind_WInput += num_neurons_layer
                     ind_E -= 1
         return weight
+
+
+    def MainAlgorithmTesting(self,features,bias,activation_function,num_hidden_layer,num_neurons_layer):
+        Output = []
+        for j in range(len(features["X1"])):
+                    # getting input vector
+                    X = [features["X1"][j], features["X2"][j],
+                         features["X3"][j], features["X4"][j]]
+                    YOut = features["Y"][j]
+                    weights_inputs = self.NetInput(X, self.weights, self.weights_inputs,
+                                                   bias, num_hidden_layer,
+                                                   num_neurons_layer,
+                                                   activation_function)
+                    Length = len(weights_inputs)
+                    if weights_inputs[Length - 1] > weights_inputs[Length - 2] & \
+                        weights_inputs[Length - 1] > weights_inputs[Length -3]:
+                        Output.append(1)
+                    elif weights_inputs[Length - 2] > weights_inputs[Length - 1] & \
+                        weights_inputs[Length - 2] > weights_inputs[Length -3]:
+                        Output.append(2)
+                    else:
+                        Output.append(3)
+        return Output
