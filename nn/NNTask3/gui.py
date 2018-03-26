@@ -209,9 +209,7 @@ class GUI:
                                activation_function, num_hidden_layer,
                                num_neurons_layer)
 
-        self.w1 = w1
-        self.w2 = w2
-        self.b = b
+
         #plt.plot(w1)
 
     def testing(self):
