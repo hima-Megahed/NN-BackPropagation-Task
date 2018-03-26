@@ -27,7 +27,10 @@ class BackPropagation:
                                                    bias, num_hidden_layer,
                                                    num_neurons_layer,
                                                    activation_function)
-                    yu=0
+                    error = self.propagate_error(weights_inputs, weights,
+                                                 num_hidden_layer,
+                                                 num_neurons_layer,
+                                                 YOut, activation_function)
 
 
         else:  # Threshold MSE
@@ -135,6 +138,24 @@ class BackPropagation:
     def Hyperbolic_tangent_derivative(x):
         return 1- np.power(np.tanh(x),2)
 
-    def propagate_error(self, weights_inputs):
-        f
-        return 1
+    def propagate_error(self, weights_inputs, weight, num_hidden_layer,
+                        num_neurons_layer, YOut, activation_function):
+        error = list(len(weights_inputs))
+        ind = len(weights_inputs) - 1
+        for i in reversed(range(num_hidden_layer)):
+            if i != num_hidden_layer:
+                for j in range(num_neurons_layer):
+                    sum = 0.0
+                    if i+1 == num_hidden_layer:
+                        for k in range(2):
+                            sum += weights_inputs((i+1)*num_neurons_layer+k)*error[(i+1)*num_neurons_layer+k]
+                    else:
+                        for k in range(num_neurons_layer):
+                            sum += weights_inputs[(i + 1) * num_neurons_layer + k]*error[(i+1)*num_neurons_layer+k]
+                    error[i*num_hidden_layer+j] = sum * self.drivative_transfer(activation_function,weights_inputs[i*num_neurons_layer+j]);
+            else:
+                for j in range(2):
+                    y = YOut - weights_inputs[ind]
+                    ind -= 1
+                    error[num_hidden_layer*num_neurons_layer+(3-j)]=y* self.drivative_transfer(activation_function,weights_inputs[num_hidden_layer*num_neurons_layer+(3-j)])
+        return error
