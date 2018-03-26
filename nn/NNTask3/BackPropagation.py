@@ -29,6 +29,7 @@ class BackPropagation:
                                                    activation_function)
                     yu=0
 
+
         else:  # Threshold MSE
             y = 5
             # TODO: Implement Threshold as stopping condition
@@ -119,3 +120,21 @@ class BackPropagation:
                     ind += 1
     # TODO: Implement backward error propagation
         return weights, weights_inputs
+
+    def drivative_transfer(self, activation_function, x):
+        if activation_function == 1:
+            return self.sigmoid_derivative(x)
+        else:
+            return self.Hyperbolic_tangent_derivative(x)
+
+    @staticmethod
+    def sigmoid_derivative(x):
+        return x * (1-x)
+
+    @staticmethod
+    def Hyperbolic_tangent_derivative(x):
+        return 1- np.power(np.tanh(x),2)
+
+    def propagate_error(self, weights_inputs):
+        f
+        return 1
