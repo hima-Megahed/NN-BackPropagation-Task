@@ -46,6 +46,7 @@ class GUI:
         self.w1 = 0
         self.w2 = 0
         self.b = 0
+        self.mainAlgo = [];
         self.NumberOfHiddenLayers = tk.IntVar(self.root)
         self.NumberOfHiddenLayers.set(2)
         self.NumberOfNeuronsInEachLayer = tk.IntVar(self.root)
@@ -135,6 +136,27 @@ class GUI:
 
 
 
+
+        self.testing_features['X1'] = rd.IrisX1[30:50]
+        self.testing_features['X2'] = rd.IrisX2[30:50]
+        self.testing_features['X3'] = rd.IrisX3[30:50]
+        self.testing_features['X4'] = rd.IrisX4[30:50]
+        self.testing_features['Y'] = [1 for i in range(30,50)]
+        # Reading second chunk of data
+        self.testing_features['X1'].extend(rd.IrisX1[80:100])
+        self.testing_features['X2'].extend(rd.IrisX2[80:100])
+        self.testing_features['X3'].extend(rd.IrisX3[80:100])
+        self.testing_features['X4'].extend(rd.IrisX4[80:100])
+        self.testing_features['Y'].extend([2 for i in range(80,100)])
+        # Reading third chunk of data
+        self.testing_features['X1'].extend(rd.IrisX1[130:150])
+        self.testing_features['X2'].extend(rd.IrisX2[130:150])
+        self.testing_features['X3'].extend(rd.IrisX3[130:150])
+        self.testing_features['X4'].extend(rd.IrisX4[130:150])
+        self.testing_features['Y'].extend([3 for i in range(130, 150)])
+
+
+
     def manageTestingFeatures(self):
         featureX,featureY = self.initilizeData()
         choosenClasses = self.choosenClasses.get()
@@ -191,8 +213,7 @@ class GUI:
             pi.plot(featureX, featureY, 'X'+ str(feature1), 'X'+str(feature2),c1,c2)
 
     def learning(self):
-        mainAlgo = BackPropagation()
-        adalinealgo = AdaLineAlgo()
+        self.mainAlgo = BackPropagation()
         num_hidden_layer = self.NumberOfHiddenLayers.get()
         num_neurons_layer = self.NumberOfNeuronsInEachLayer.get()
         eta = float(self.learnRate.get())
@@ -207,7 +228,7 @@ class GUI:
         # Initializing Training Features
         self.manageTrainingFeatures()
         # Training The NN
-        mainAlgo.MainAlgorithm(self.training_features, eta, epochsNo
+        self.mainAlgo.MainAlgorithm(self.training_features, eta, epochsNo
                                , bias, threshold, stopping_criteria,
                                activation_function, num_hidden_layer,
                                num_neurons_layer)
@@ -216,23 +237,34 @@ class GUI:
         #plt.plot(w1)
 
     def testing(self):
-        adalinealgo = AdaLineAlgo()
-        #bias = self.bias.get()
-        self.manageTestingFeatures()
-        w = [self.w1,self.w2]
-        conf = np.zeros([2,2], dtype='int32')
-        for i in range(0,len(self.X1_testing)):
-            y = adalinealgo.adalineAlgoTest(self.X1_testing[i],self.X2_testing[i],w,self.b)
-            if (y == 1 and self.c1 == self.classlable_testing[i]):
-                conf[0, 0] = conf[0, 0] + 1
-            elif (y == -1 and self.classlable_testing[i] == self.c2):
-                conf[1,1] = conf[1,1] + 1
-            elif (y == 1 and self.classlable_testing[i] != self.c1):
-                conf[0, 1] = conf[0, 1] + 1
-            elif (y == -1 and self.classlable_testing[i] != self.c2):
-                conf[1, 0] = conf[1, 0] + 1                
 
-            print(self.X1_testing[i],self.X2_testing[i])
-            print(y)
-        print(self.classlable_testing)
-        print(conf)
+        self.mainAlgo = BackPropagation()
+        num_hidden_layer = self.NumberOfHiddenLayers.get()
+        num_neurons_layer = self.NumberOfNeuronsInEachLayer.get()
+        bias = self.bias.get()
+        activation_function = self.activationFunction.get()
+
+        # Initializing Training Features
+        self.manageTrainingFeatures()
+        # Training The NN
+        Output = self.mainAlgo.MainAlgorithmTesting(self.testing_features,bias,
+                               activation_function, num_hidden_layer,
+                               num_neurons_layer)
+
+        # computing Confusion Matrix
+        Confusion_Matrix = [4,4]
+        for i in range(len(Output)):
+            Y = self.testing_features["Y"][i];
+            Confusion_Matrix[Y][Output[i]]+=1
+        print(Confusion_Matrix)
+
+        #Computing OverAllAccurcy
+        OverAllAccurcy = 0.0;
+        sum = 0.0;
+        for i in range(len(Output)):
+            Y = self.testing_features["Y"][i];
+            if Y == Output[i]:
+                sum+=1;
+        OverAllAccurcy = sum / len(Output)
+        print(OverAllAccurcy)
+
