@@ -16,6 +16,7 @@ class GUI:
         self.learnRate = tk.StringVar(self.root)
         self.learnRate.set(0.01)
         self.epochsNo = tk.StringVar(self.root)
+        self.epochsNo.set(4)
         self.bias = tk.IntVar(self.root)
         self.bias.set(0)
         self.root.resizable(height=True, width=True)
@@ -46,7 +47,9 @@ class GUI:
         self.w2 = 0
         self.b = 0
         self.NumberOfHiddenLayers = tk.IntVar(self.root)
+        self.NumberOfHiddenLayers.set(2)
         self.NumberOfNeuronsInEachLayer = tk.IntVar(self.root)
+        self.NumberOfNeuronsInEachLayer.set(3)
         self.activationFunction = tk.IntVar()
         self.activationFunction.set(1)
         self.stoppingCriteria = tk.IntVar()
@@ -209,9 +212,7 @@ class GUI:
                                activation_function, num_hidden_layer,
                                num_neurons_layer)
 
-        self.w1 = w1
-        self.w2 = w2
-        self.b = b
+
         #plt.plot(w1)
 
     def testing(self):
