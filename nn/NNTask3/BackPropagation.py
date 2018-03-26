@@ -39,7 +39,6 @@ class BackPropagation:
                        ,num_neurons_layer, eta, error, bias, X)
                     self.weights = weights
                     self.weights_inputs = weights_inputs
-            yuo=0
 
         else:  # Threshold MSE
             MSE = 10000000.0
@@ -59,12 +58,10 @@ class BackPropagation:
                                                  YOut, activation_function)
 
                     weights = self.update_weights(weights_inputs, weights, num_hidden_layer
-                       ,num_neurons_layer, eta, error)
+                       ,num_neurons_layer, eta, error, bias, X)
 
                     MSE = self.ComputeMeanSquareError(error)
-
-            # TODO: Implement Threshold as stopping condition
-        return 1
+                    print(MSE)
 
     def NetInput(self, X, weight, weights_inputs, bias, num_hidden_layer,
                  num_neurons_layer, activation_function):
@@ -259,10 +256,10 @@ class BackPropagation:
                                                    num_neurons_layer,
                                                    activation_function)
                     Length = len(weights_inputs)
-                    if weights_inputs[Length - 1] > weights_inputs[Length - 2] & \
+                    if weights_inputs[Length - 1] > weights_inputs[Length - 2] and \
                         weights_inputs[Length - 1] > weights_inputs[Length -3]:
                         Output.append(1)
-                    elif weights_inputs[Length - 2] > weights_inputs[Length - 1] & \
+                    elif weights_inputs[Length - 2] > weights_inputs[Length - 1] and \
                         weights_inputs[Length - 2] > weights_inputs[Length -3]:
                         Output.append(2)
                     else:

@@ -238,7 +238,7 @@ class GUI:
 
     def testing(self):
 
-        self.mainAlgo = BackPropagation()
+        # self.mainAlgo = BackPropagation()
         num_hidden_layer = self.NumberOfHiddenLayers.get()
         num_neurons_layer = self.NumberOfNeuronsInEachLayer.get()
         bias = self.bias.get()
@@ -247,24 +247,24 @@ class GUI:
         # Initializing Training Features
         self.manageTrainingFeatures()
         # Training The NN
-        Output = self.mainAlgo.MainAlgorithmTesting(self.testing_features,bias,
+        Output = self.mainAlgo.MainAlgorithmTesting(self.testing_features, bias,
                                activation_function, num_hidden_layer,
                                num_neurons_layer)
 
         # computing Confusion Matrix
-        Confusion_Matrix = [4,4]
+        Confusion_Matrix = [[0 for x in range(4)] for y in range(4)]
         for i in range(len(Output)):
-            Y = self.testing_features["Y"][i];
+            Y = self.testing_features["Y"][i]
             Confusion_Matrix[Y][Output[i]]+=1
         print(Confusion_Matrix)
 
         #Computing OverAllAccurcy
-        OverAllAccurcy = 0.0;
-        sum = 0.0;
+        OverAllAccurcy = 0.0
+        sum = 0.0
         for i in range(len(Output)):
-            Y = self.testing_features["Y"][i];
+            Y = self.testing_features["Y"][i]
             if Y == Output[i]:
-                sum+=1;
+                sum += 1
         OverAllAccurcy = sum / len(Output)
         print(OverAllAccurcy)
 
