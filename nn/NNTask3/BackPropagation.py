@@ -4,7 +4,8 @@ import math
 
 class BackPropagation:
     def __init__(self):
-        pass
+        self.weights = {}
+        self.weights_inputs = []
 
     def MainAlgorithm(self, features, eta, epochs, bias, threshold,
                       stopping_criteria, activation_function,
@@ -27,13 +28,16 @@ class BackPropagation:
                                                    bias, num_hidden_layer,
                                                    num_neurons_layer,
                                                    activation_function)
-                   # error = self.propagate_error(weights_inputs, weights,
-                    #                             num_hidden_layer,
-                     #                            num_neurons_layer,
-                      #                           YOut, activation_function)
-                    error = [1,2,3,4,5,6,7,8,9]
+                    error = self.propagate_error(weights_inputs, weights,
+                                                 num_hidden_layer,
+                                                 num_neurons_layer,
+                                                 YOut, activation_function)
+
                     weights = self.update_weights(weights_inputs, weights, num_hidden_layer
-                       ,num_neurons_layer, eta, error)
+                       ,num_neurons_layer, eta, error, bias, X)
+                    self.weights = weights
+                    self.weights_inputs = weights_inputs
+            yuo=0
 
         else:  # Threshold MSE
             y = 5
@@ -145,7 +149,6 @@ class BackPropagation:
         error = [0] * len(weights_inputs)
         ind = len(weights_inputs) - 1
         for i in reversed(range(num_hidden_layer+1)):
-            print(i)
             if i != num_hidden_layer:
                 for j in range(num_neurons_layer):
                     sum = 0.0
@@ -168,24 +171,51 @@ class BackPropagation:
         return error
 
     def update_weights(self, weights_inputs, weight, num_hidden_layer
-                       ,num_neurons_layer, eta, error):
+                       ,num_neurons_layer, eta, error, bias, X):
         ind = len(weight)
-        ind_WInput = len(weights_inputs) - 1
+        ind_WInput = len(weights_inputs) - 4
         ind_E = len(error) - 1
         for i in reversed(range(num_hidden_layer + 1)):
             # output layer weights
             if i == num_hidden_layer:
-                for j in range(3):
-                    weight["w" + str(ind)] = eta * weights_inputs[ind_WInput]\
-                                             * error[ind_E]
+                for j in reversed(range(3)):
+                    for k in reversed(range(num_neurons_layer + 1)):
+                        if k == 0:
+                            weight["w" + str(ind)][k] = eta * bias\
+                                                     * error[ind_E]
+                        else:
+                            weight["w" + str(ind)][k] = eta * weights_inputs[ind_WInput] \
+                                                     * error[ind_E]
+                            ind_WInput -= 1
                     ind -= 1
-                    ind_WInput -= 1
+                    ind_WInput += num_neurons_layer
+                    ind_E -= 1
+            elif i == 0:
+                for j in reversed(range(num_neurons_layer)):
+                    for k in reversed(range(5)):
+                        if k == 0:
+                            weight["w" + str(ind)][k] = eta * bias\
+                                                     * error[ind_E]
+                        else:
+                            weight["w" + str(ind)][k] = eta * X[k-1] \
+                                                     * error[ind_E]
+                    ind -= 1
                     ind_E -= 1
             else:
+                ind_WInput -= num_neurons_layer
+
                 for j in range(num_neurons_layer):
-                    weight["w" + str(ind)] = eta * weights_inputs[ind_WInput]\
-                                             * error[ind_E]
+                    for k in reversed(range(num_neurons_layer + 1)):
+                        if k == 0:
+                            weight["w" + str(ind)][k] = eta * bias\
+                                                     * error[ind_E]
+                        else:
+                            if ind_E < 0:
+                                print("err ", ind_E)
+                            weight["w" + str(ind)][k] = eta * weights_inputs[ind_WInput]\
+                                                        * error[ind_E]
+                            ind_WInput -= 1
                     ind -= 1
-                    ind_WInput -= 1
+                    ind_WInput += num_neurons_layer
                     ind_E -= 1
         return weight

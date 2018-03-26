@@ -47,9 +47,9 @@ class GUI:
         self.w2 = 0
         self.b = 0
         self.NumberOfHiddenLayers = tk.IntVar(self.root)
-        self.NumberOfHiddenLayers.set(2)
+        self.NumberOfHiddenLayers.set(3)
         self.NumberOfNeuronsInEachLayer = tk.IntVar(self.root)
-        self.NumberOfNeuronsInEachLayer.set(3)
+        self.NumberOfNeuronsInEachLayer.set(5)
         self.activationFunction = tk.IntVar()
         self.activationFunction.set(1)
         self.stoppingCriteria = tk.IntVar()
